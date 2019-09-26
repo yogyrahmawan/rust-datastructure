@@ -1,0 +1,8 @@
+[package]
+edition = '2018'
+name = "linkedlist"
+version = "0.1.0"
+authors = ["Yogy Rahmawan"]
+
+[dependencies]
+rand = "^0.5"
