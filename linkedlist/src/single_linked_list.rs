@@ -20,7 +20,7 @@ impl Node {
 }
 
 #[derive(Clone)]
-struct TransactionLog {
+pub struct TransactionLog {
     head: Option<Rc<RefCell<Node>>>,
     tail: Option<Rc<RefCell<Node>>>,
     pub length: u64
