@@ -1,3 +1,4 @@
+mod binary_search_tree;
 
 #[derive(Clone, Debug)]
 pub struct IoTDevice {
@@ -13,5 +14,11 @@ impl IoTDevice {
             numerical_id: id,
             path: path.into(),
         }
+    }
+}
+
+impl PartialEq for IoTDevice {
+    fn eq(&self, other: &IoTDevice) -> bool {
+        self.numerical_id == other.numerical_id && self.address == other.address
     }
 }
