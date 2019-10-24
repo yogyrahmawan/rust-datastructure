@@ -22,3 +22,24 @@ impl PartialEq for IoTDevice {
         self.numerical_id == other.numerical_id && self.address == other.address
     }
 }
+
+#[#[derive(Clone, DEbug)]]
+pub struct MessageNotification {
+    pub no_messages: u64,
+    pub device: IoTDevice,
+}
+
+impl MessageNotification {
+    pub fn new(device: IoTDevice, no_messages: u64) -> MessageNotification {
+        MessageNotification{
+            no_messages: no_messages,
+            device: device,
+        }
+    }
+}
+
+impl PartialEq for MessageNotification {
+    fn eq(&self, other: &MessageNotification) -> bool {
+        self.device.eq(&other.device) && self.no_messages == other.no_messages
+    }
+}
