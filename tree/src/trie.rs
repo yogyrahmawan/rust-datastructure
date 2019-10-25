@@ -1,4 +1,4 @@
-use crate:IoTDevice;
+use crate::IoTDevice;
 use std::boxed::Box;
 use std::collections::HashMap;
 use std::mem;
@@ -76,7 +76,7 @@ impl BestDeviceRegistry {
 
     pub fn walk(&self, callback: impl Fn(&IoTDevice) -> ()) {
         for r in self.root.values() {
-            self.walk_r(&r, callback);
+            self.walk_r(&r, &callback);
         }
     }
 

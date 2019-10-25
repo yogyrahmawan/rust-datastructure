@@ -50,6 +50,7 @@ impl MessageChecker {
                 i = if self.has_more_messages(children.0, children.1) {
                     if self.has_more_messages(children.0, i){
                         self.swap(i, children.0);
+                        children.0
                     } else {
                         break;
                     }

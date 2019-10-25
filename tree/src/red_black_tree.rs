@@ -5,18 +5,12 @@ use std::mem;
 use std::rc::Rc; 
 
 type BareTree = Rc<RefCell<Node>>;
-type Tree = Option<BareTree>
+type Tree = Option<BareTree>;
 
 #[derive(Clone, Debug, PartialEq)]
 enum Color {
     Red,
     Black,
-}
-
-#[derive(PartialEq)]
-enum RBOperation {
-    LeftNode, 
-    RightNode,
 }
 
 #[derive(PartialEq)]
@@ -32,6 +26,14 @@ enum Rotation {
 }
 
 struct Node {
+    pub color: Color,
+    pub dev: IoTDevice,
+    pub parent: Tree,
+    left: Tree,
+    right: Tree,
+}
+
+impl Node {
     pub fn new(dev: IoTDevice) -> Tree {
         Some(Rc::new(RefCell::new(Node{
             color: Color::Red, 
@@ -111,7 +113,7 @@ impl BetterDeviceRegistry {
     }
 
     fn validate(&self, node: &Tree, parent_color: Color, black_height: usize) -> (usize, usize, usize) {
-        if let Some(n) == node {
+        if let Some(n) = node {
             let n = n.borrow();
             let red_red = if parent_color == Color::Red && n.color == Color::Red {
                 1
@@ -202,7 +204,7 @@ impl BetterDeviceRegistry {
                                     parent = n.borrow().parent.as_ref().unwrap().clone();
                                 }
                                 parent.borrow_mut().color = Color::Black; 
-                                parent.borrow().parent.as_ref().unwrap().borrow_mut()/color = Color::Red; 
+                                parent.borrow().parent.as_ref().unwrap().borrow_mut().color = Color::Red; 
 
                                 let grandparent = n
                                     .borrow()
@@ -248,9 +250,9 @@ impl BetterDeviceRegistry {
         match direction {
             Rotation::Right => {
                 let x = node;
-                let y - x.borrow().left.clone();
+                let y = x.borrow().left.clone();
                 x.borrow_mut().left = match y {
-                    Some(ref y) => y.borrow().right.clone();
+                    Some(ref y) => y.borrow().right.clone(),
                     _ => None,
                 };
 
@@ -272,7 +274,7 @@ impl BetterDeviceRegistry {
                     y.as_ref().unwrap().borrow_mut().parent = None;
                 }
                 y.as_ref().unwrap().borrow_mut().right = Some(x.clone());
-                x.borrow_mut()().parent = y.clone();
+                x.borrow_mut().parent = y.clone();
             }
 
             Rotation::Left => {
@@ -338,6 +340,23 @@ impl BetterDeviceRegistry {
             &self.root,
             &IoTDevice::new(numerical_id, "".to_owned(), "".to_owned()),
         )
+    }
+
+    fn find_r(&self, node: &Tree, dev: &IoTDevice) -> Option<IoTDevice> {
+        match node {
+            Some(n) => {
+                let n = n.borrow();
+                if n.dev.numerical_id == dev.numerical_id {
+                    Some(n.dev.clone())
+                } else {
+                    match self.check(&n.dev, &dev) {
+                        RBOperation::LeftNode => self.find_r(&n.left, dev),
+                        RBOperation::RightNode => self.find_r(&n.right, dev),
+                    }
+                }
+            }
+            _ => None,
+        }
     }
 
     pub fn walk(&self, callback: impl Fn(&IoTDevice) -> ()) {
